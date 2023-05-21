@@ -121,12 +121,12 @@ nextOS Nothing = Just GnuPlusLinux
 nextOS (Just GnuPlusLinux) = Just OpenBSDPlusNevermindJustBSDStill 
 nextOS (Just OpenBSDPlusNevermindJustBSDStill) = Just Mac
 nextOS (Just Mac) = Just Windows
-nextOs (Just Windows) = Nothing
+nextOS (Just Windows) = Nothing
 
 oses :: Maybe OperatingSystem -> [OperatingSystem]
 oses p = oses' p [] where 
                 oses' Nothing xs = xs
-                oses' (Just x) xs = x : oses' (nextOs (Just x)) xs
+                oses' (Just x) xs = x : oses' (nextOS (Just x)) xs
 
 nextProgLang :: Maybe ProgLang -> Maybe ProgLang
 nextProgLang Nothing = Just Haskell
@@ -185,22 +185,58 @@ postorder t = postorder' t [] where
               postorder' Leaf _ = []
               postorder' (Node left x right)  xs = (postorder' left xs) ++ (postorder' right xs) ++ [x]
 
+-- each node adds its childred to the queue
+-- and therefore the root node needs to be adeed
+-- explicilty since it has no parent
 breadthFirst :: BinaryTree a -> [a]
-breadthFirst t = let (xs, _) = breadthFirst' t ([], [])
-                 in xs
+breadthFirst root@(Node l a r) =  a: (breadthFirst2 root [])
+                 
 
-breadthFirst' :: BinaryTree a -> ([a], [a]) -> ([a], [a]) 
-breadthFirst' Leaf _ = ([], []) 
-breadthFirst' (Node l a r) (ns, []) = breadthFirst' (Node l a r) (ns, [a]) 
-breadthFirst' (Node l a r) (ns, (q:qs)) =  let (lns, lqs) = breadthFirst' l ([], [])
-                                               (rns, rqs) = breadthFirst' r ([], [])
-                                           in (q : (lns ++ rns), qs ++ lqs ++ rqs)
+breadthFirst' :: BinaryTree a -> [a] -> [a] 
+breadthFirst' Leaf _ = [] 
+breadthFirst' (Node tl@(Node _ al _ ) a tr@(Node _ ar _)) xs = let qs = xs ++ [al] ++ [ar]
+                                                                   ls = breadthFirst' tl []
+                                                                   rs = breadthFirst' tr []
+                                                               in ls ++ rs ++ qs
+breadthFirst' (Node Leaf a tr@(Node _ ar _)) xs = let qs = xs ++ [ar]
+                                                      rs = breadthFirst' tr []
+                                                  in rs ++ qs
+breadthFirst' (Node tl@(Node _ al _) a Leaf) xs = let qs = xs ++ [al]
+                                                      ls = breadthFirst' tl []
+                                                  in ls ++ qs
+breadthFirst' (Node Leaf _ Leaf) _ = []
+
+breadthFirst2 :: BinaryTree a -> [a] -> [a] 
+breadthFirst2 Leaf _ = [] 
+breadthFirst2 (Node tl@(Node _ al _ ) a tr@(Node _ ar _)) xs = let qs = [al] ++ [ar] ++ xs
+                                                                   ls = breadthFirst2 tl []
+                                                                   rs = breadthFirst2 tr []
+                                                               in qs ++ ls ++ rs
+breadthFirst2 (Node Leaf a tr@(Node _ ar _)) xs = let qs = ar : xs
+                                                      rs = breadthFirst2 tr []
+                                                  in qs ++ rs
+breadthFirst2 (Node tl@(Node _ al _) a Leaf) xs = let qs = al : xs
+                                                      ls = breadthFirst2 tl []
+                                                  in qs ++ ls
+breadthFirst2 (Node Leaf _ Leaf) _ = []
 
 testTree :: BinaryTree Integer
 testTree =
         Node (Node Leaf 1 Leaf)
         2
         (Node Leaf 3 Leaf)
+testTree'' :: BinaryTree Integer
+testTree'' =
+        Node 
+          (Node
+            (Node Leaf 3 Leaf)
+            1 
+            (Node Leaf 10 Leaf))
+        2
+          (Node
+            (Node Leaf 35 Leaf)
+            11
+            (Node Leaf 110 Leaf))
 testPreorder :: IO ()
 testPreorder =
         if preorder testTree == [2, 1, 3]
@@ -217,12 +253,18 @@ testPostorder =
   then putStrLn "Postorder fine!"
   else putStrLn "Bad news bears"
 
+testBreadthFirst :: IO ()
+testBreadthFirst =
+  if breadthFirst testTree'' ==[2,1,11,3,10,35,110]
+  then putStrLn "Breadth first fine!"
+  else putStrLn "Bad news bears"
+
 runTreeTests :: IO ()
 runTreeTests = do
   testPreorder
   testInorder
   testPostorder
-
+  testBreadthFirst
 
 foldTree :: (a->b->b) -> b -> BinaryTree a -> b
 foldTree f b Leaf = b
