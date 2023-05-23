@@ -4,6 +4,9 @@ import Data.Char
 charToCode :: Char -> Int
 charToCode c = (ord . toUpper $ c) - ord 'A'
 
+codeToChar :: Int -> Char
+codeToChar n = chr (n + ord 'A')
+
 shiftRight :: Int -> Char -> Char
 shiftRight s c= let i = charToCode c
                  in chr (((i + s) `mod` 26) + ord 'A')

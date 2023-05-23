@@ -1,7 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE FlexibleInstances #-}
 module Ch11 where
-
+import Data.Char
 data Vehicle = Car Manufacturer Price |
                Plane Airline PlaneSize
                deriving (Eq, Show)
@@ -255,7 +255,7 @@ testPostorder =
 
 testBreadthFirst :: IO ()
 testBreadthFirst =
-  if breadthFirst testTree'' ==[2,1,11,3,10,35,110]
+  if breadthFirst testTree'' == [2,1,11,3,10,35,110]
   then putStrLn "Breadth first fine!"
   else putStrLn "Bad news bears"
 
@@ -269,3 +269,25 @@ runTreeTests = do
 foldTree :: (a->b->b) -> b -> BinaryTree a -> b
 foldTree f b Leaf = b
 foldTree f b (Node l a r) = f a (foldTree f (foldTree f b r) l)
+------------------------------------------------------------------------------
+-- 11.18
+isSubseqOf :: (Eq a) => [a] -> [a] -> Bool
+isSubseqOf [] _ = True
+isSubseqOf _ [] = False
+isSubseqOf p t@(_:xs) = (p == (take (length p)) t) || (isSubseqOf p xs)  
+
+capitalizeWords :: String -> [(String, String)]
+capitalizeWords xss = [(t, (toUpper w) : ws) | t@(w:ws) <- words xss]
+
+capitalizeWord :: String -> String
+capitalizeWord [] = []
+capitalizeWord (x:xs) | x == ' ' = capitalizeWord xs
+                      | otherwise = (toUpper x) : xs
+
+
+capitalizeParagraph :: String -> String
+capitalizeParagraph [] = []
+capitalizeParagraph xs = foldr (++) [] (capPars xs)
+                           where capPars xs' =  
+                                  let (r,rs) = break (== '.') xs'
+                                  in r : capPars rs
