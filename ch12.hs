@@ -8,7 +8,6 @@ data Person =
   Person Name Age
   deriving (Show)
 
-
 data PersonInvalid
   = NameEmpty
   | AgeTooLow
@@ -32,18 +31,18 @@ type ValidatePerson a =
 
 ageOkay :: Age
         -> Either [PersonInvalid] Age
-ageOkay age 
+ageOkay age
         | age >= 0 = Right age
         | otherwise = Left [AgeTooLow]
 
 nameOkay :: Name
         -> Either [PersonInvalid] Name
-nameOkay name 
-        | name /= "" = Right name 
+nameOkay name
+        | name /= "" = Right name
         | otherwise = Left [NameEmpty]
 
 mkPerson :: Name -> Age -> ValidatePerson Person
-mkPerson name age = 
+mkPerson name age =
   mkPerson' (nameOkay name) (ageOkay age)
 
 mkPerson' :: ValidatePerson Name
@@ -51,5 +50,5 @@ mkPerson' :: ValidatePerson Name
           -> ValidatePerson Person
 mkPerson' (Right name) (Right age) = Right (Person name age)
 mkPerson' (Left badName) (Left badAge) = Left (badName ++ badAge)
-mkPerson' (Left badName) _ = Left badName    
-mkPerson' _ (Left badAge) = Left badAge 
+mkPerson' (Left badName) _ = Left badName
+mkPerson' _ (Left badAge) = Left badAge
