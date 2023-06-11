@@ -1,0 +1,10 @@
+a = 5
+/*
+skipped multiline comment
+*/
+b = -1
+// skipped comment 
+while a positive {
+  print a
+  a += b
+}
