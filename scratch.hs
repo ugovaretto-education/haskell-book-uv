@@ -146,3 +146,22 @@ eval (Add ex1 ex2) = (eval ex1) + (eval ex2)
 printExpr :: Expr -> String
 printExpr (Lit n) = show n
 printExpr (Add ex1 ex2) = (printExpr ex1) ++ " + " ++ (printExpr ex2)
+
+fib :: Int -> [Int]
+fib 1 = [1]
+fib 2 = [1, 1]
+fib n = let ls@(x:y:xs) = fib $ n-1
+        in (y + x) : ls
+
+fib' :: [Int] -> [Int]
+fib' [] = fib' [0]
+fib' [0] = fib' [1,0]
+fib' xs@(x:y:_) = (x+y) : (fib' $ (x+y) : xs) 
+
+fibonacci :: Int -> Int
+fibonacci n = last $ take n $ fib' [1, 0]
+
+maybeAll :: (a -> Bool) -> Maybe a -> Bool
+maybeAll = all
+
+

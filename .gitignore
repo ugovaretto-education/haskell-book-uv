@@ -21,6 +21,8 @@ cabal.project.local~
 .HTF/
 .ghc.environment.*
 .dist-newstyle
-./ch13/hangman/dist-newstyle
+ch13/hangman/dist-newstyle
+ch13/hangman/cabal.project.local
+ch13/hangman/cabal.project.local~
 *~
-.ch13/hangman/.stack-work
+

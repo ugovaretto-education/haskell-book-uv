@@ -3,22 +3,21 @@ name:               myhangman
 version:            0.1.0.0
 
 -- A short (one-line) description of the package.
--- synopsis:
+synopsis: Playing Hangman
 
 -- A longer description of the package.
 -- description:
 
 -- A URL where users can report bugs.
 -- bug-reports:
-
--- The license under which the package is released.
--- license:
+license:            0BSD
+license-file:       LICENSE
 author:             Ugo Varetto
 maintainer:         ugovaretto@gmail.com
 
 -- A copyright notice.
--- copyright:
--- category:
+copyright: Copyright (c) Ugo Varetto 2023
+category: Game
 extra-source-files: CHANGELOG.md
 
 executable myhangman
@@ -29,6 +28,9 @@ executable myhangman
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
-    build-depends:    base ^>=4.18.0.0
+    build-depends:
+        base ^>=4.18.0.0,
+        random,
+        split
     hs-source-dirs:   app
     default-language: Haskell2010
