@@ -28,5 +28,8 @@ ch14/morse/dist-newstyle
 ch14/morse/cabal.project.local
 ch14/morse/cabal.project.local~
 ch14/addition/dist-newstyle
+ch14/myarbitrary/dist-newstyle
+ch14/myarbitrary/cabal.project.local
+ch14/myarbitrary/cabal.project.local~
 *~
 

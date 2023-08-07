@@ -1,4 +1,11 @@
 module Main where
+import Control.Monad (forever, when)
+import Data.List (intercalate)
+import Data.Traversable (traverse)
+import Morse (stringToMorse, morseToChar)
+import System.Environment (getArgs)
+import System.Exit (exitFailure,exitSuccess)
+import System.IO (hGetLine, hIsEOF, stdin)
 
 convertToMorse :: IO ()
 convertToMorse = forever $ do
@@ -34,4 +41,19 @@ convertFromMorse = forever $ do
           exitFailure
 -------------------------------------------------------------------------------
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = do
+  mode <- getArgs
+  case mode of
+    [arg] ->
+      case arg of
+        "from" -> convertFromMorse
+        "to"-> convertToMorse
+        _ -> argError
+    _ -> argError
+  where argError = do
+          putStrLn  "Please specify the\
+                    \ first argument\
+                    \ as being 'from' or\
+                    \ 'to' morse,\
+                    \ such as: morse to"
+          exitFailure
