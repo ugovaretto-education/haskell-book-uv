@@ -24,5 +24,9 @@ cabal.project.local~
 ch13/hangman/dist-newstyle
 ch13/hangman/cabal.project.local
 ch13/hangman/cabal.project.local~
+ch14/morse/dist-newstyle
+ch14/morse/cabal.project.local
+ch14/morse/cabal.project.local~
+ch14/addition/dist-newstyle
 *~
 
