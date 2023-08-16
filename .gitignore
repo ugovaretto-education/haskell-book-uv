@@ -32,4 +32,6 @@ ch14/myarbitrary/dist-newstyle
 ch14/myarbitrary/cabal.project.local
 ch14/myarbitrary/cabal.project.local~
 *~
-
+*.exe
+*.out
+tmp*
